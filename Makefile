@@ -53,7 +53,7 @@ $(OUTPUTDIR)/berserkarch-base.tar.xz:
 	$(call rootfs,berserkarch-base,base berserk-keyring blackarch-keyring chaotic-keyring)
 
 $(OUTPUTDIR)/berserkarch-base-devel.tar.xz:
-	$(call rootfs,berserkarch-base-devel,base base-devel berserk-keyring blackarch-keyring chaotic-keyring)
+	$(call rootfs,berserkarch-base-devel,base base-devel berserk-keyring blackarch-keyring chaotic-keyring vim edk2-shell grub git archiso)
 
 $(OUTPUTDIR)/Dockerfile.base: $(OUTPUTDIR)/berserkarch-base.tar.xz
 	$(call dockerfile,berserkarch-base)
