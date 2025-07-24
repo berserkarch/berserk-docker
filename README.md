@@ -1,21 +1,4 @@
-# BlackArch Official Docker Images
-
-## Quick reference
-
-Official BlackArch Linux docker images. If you find a problem, please report it [here](https://github.com/BlackArch/blackarch-docker).
-
-* **Maintainers:** BlackArch Linux developer [Stefan Venz](https://github.com/ikstream).
-* **Support:** [Matrix](https://matrix.to/#/#BlackArch:matrix.org).
-
-## What is BlackArch?
-
-BlackArch Linux is an Arch Linux-based penetration testing distribution for penetration testers and security researchers. The repository contains more than 2600 tools. You can install tools individually or in groups. BlackArch Linux is compatible with existing Arch installs. For more information, see the [BlackArch's website](https://www.blackarch.org/).
-
-![BlackArch Logo](https://raw.githubusercontent.com/BlackArch/blackarch-artwork/master/logo/ba-font-transp.png)
-
-## About the images
-
-The root filesystem tarballs for the images is auto-generated weekly at 22:30 UTC on Sunday in Github infrastructure using [Github actions](https://github.com/BlackArch/blackarch-docker/blob/master/.github/workflows/scheduled-docker-publish.yml).
+# BerserkArch Official Docker Images
 
 ### Special note about the novnc image
 
@@ -27,26 +10,42 @@ Root filesystem tarballs are provided by Github Actions and are **only** availab
 
 ## Updating
 
-BlackArch Linux is a rolling release distribution, so a full update is recommended when installing new packages. In other words, we suggest either execute RUN `pacman -Syu` immediately after your FROM statement or as soon as you docker run into a container.
-
-## Former Developer/Maintainer
-
-[Eduard Tolosa](https://github.com/Edu4rdSHL)
+Berserk Arch is a rolling release distribution, so a full update is recommended when installing new packages. In other words, we suggest either execute RUN `pacman -Syu` immediately after your FROM statement or as soon as you docker run into a container.
 
 ## Commands
 
+### Clone the Repo
+
+### Building Images
+
+```bash
+make && make berserkarch-base
+```
+
+```bash
+make && make berserkarch-base-devel
+```
+
+```bash
+docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile
+```
+
+### Running the Images
+
 ```bash
 docker run -it --security-opt seccomp=unconfined --name barchh --memory 4G --hostname berserk berserkarchlinux/berserkarch:base
+```
 
-make && make berserkarch-base
-make && make berserkarch-base-devel
+```bash
+docker run -it --rm --security-opt seccomp=unconfined --privileged --name berserk --hostname berserk berserkarchlinux/berserkarch:base-devel
+```
 
-docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile
-
+```bash
 docker run -it \
     --security-opt seccomp=unconfined \
     --hostname berserk \
     --name berserkarch \
+    --privileged \
     -p 5901:5901 \
     -p 6080:6080 \
     -p 22:22 \
