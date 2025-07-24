@@ -39,4 +39,17 @@ BlackArch Linux is a rolling release distribution, so a full update is recommend
 docker run -it --security-opt seccomp=unconfined --name barchh --memory 4G --hostname berserk berserkarchlinux/berserkarch:base
 
 make && make berserkarch-base
+make && make berserkarch-base-devel
+
+docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile
+
+docker run -it \
+    --security-opt seccomp=unconfined \
+    --hostname berserk \
+    --name berserkarch \
+    -p 5901:5901 \
+    -p 6080:6080 \
+    -p 22:22 \
+    -p 8080:8080 \
+    <image-name>
 ```

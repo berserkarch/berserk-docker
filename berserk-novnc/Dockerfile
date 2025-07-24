@@ -1,4 +1,4 @@
-FROM blackarchlinux/barch:base
+FROM berserkarchlinux/berserkarch:base
 # FROM blackarchlinux/barch:latest
 
 # Temporary patch to build on Ubuntu 20.04/10 & GitHub CI
