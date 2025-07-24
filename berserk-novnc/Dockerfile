@@ -1,5 +1,4 @@
 FROM berserkarchlinux/berserkarch:base
-# FROM blackarchlinux/barch:latest
 
 # Temporary patch to build on Ubuntu 20.04/10 & GitHub CI
 # https://bugs.archlinux.org/index.php?do=details&task_id=69563
@@ -22,7 +21,7 @@ RUN pacman -Syu --noconfirm make && \
 # Copy BlackArch configs
     cp -r /etc/skel/. /root/. && \
     rm -f /usr/bin/websockify && \
-    echo 'root:blackarch' | chpasswd && \
+    echo 'root:berserk' | chpasswd && \
     echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 
 # Expose needed ports
