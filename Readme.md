@@ -32,3 +32,11 @@ BlackArch Linux is a rolling release distribution, so a full update is recommend
 ## Former Developer/Maintainer
 
 [Eduard Tolosa](https://github.com/Edu4rdSHL)
+
+## Commands
+
+```bash
+docker run -it --security-opt seccomp=unconfined --name barchh --memory 4G --hostname berserk berserkarchlinux/berserkarch:base
+
+make && make berserkarch-base
+```

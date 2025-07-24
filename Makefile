@@ -49,22 +49,22 @@ endef
 clean:
 	rm -rf $(BUILDDIR) $(OUTPUTDIR)
 
-$(OUTPUTDIR)/arch-base.tar.xz:
-	$(call rootfs,arch-base,base)
+$(OUTPUTDIR)/berserkarch-base.tar.xz:
+	$(call rootfs,berserkarch-base,base berserk-keyring blackarch-keyring chaotic-keyring)
 
-$(OUTPUTDIR)/arch-base-devel.tar.xz:
-	$(call rootfs,arch-base-devel,base base-devel)
+$(OUTPUTDIR)/berserkarch-base-devel.tar.xz:
+	$(call rootfs,berserkarch-base-devel,base base-devel berserk-keyring blackarch-keyring chaotic-keyring)
 
-$(OUTPUTDIR)/Dockerfile.base: $(OUTPUTDIR)/arch-base.tar.xz
-	$(call dockerfile,arch-base)
+$(OUTPUTDIR)/Dockerfile.base: $(OUTPUTDIR)/berserkarch-base.tar.xz
+	$(call dockerfile,berserkarch-base)
 
-$(OUTPUTDIR)/Dockerfile.base-devel: $(OUTPUTDIR)/arch-base-devel.tar.xz
-	$(call dockerfile,arch-base-devel)
+$(OUTPUTDIR)/Dockerfile.base-devel: $(OUTPUTDIR)/berserkarch-base-devel.tar.xz
+	$(call dockerfile,berserkarch-base-devel)
 
-.PHONY: docker-arch-base
-arch-base: $(OUTPUTDIR)/Dockerfile.base
-	docker build -f $(OUTPUTDIR)/Dockerfile.arch-base -t blackarchlinux/barch:base $(OUTPUTDIR)
+.PHONY: docker-berserkarch-base
+berserkarch-base: $(OUTPUTDIR)/Dockerfile.base
+	docker build -f $(OUTPUTDIR)/Dockerfile.berserkarch-base -t berserkarchlinux/berserkarch:base $(OUTPUTDIR)
 
-.PHONY: docker-arch-base-devel
-arch-base-devel: $(OUTPUTDIR)/Dockerfile.base-devel
-	docker build -f $(OUTPUTDIR)/Dockerfile.arch-base-devel -t blackarchlinux/barch:base-devel $(OUTPUTDIR)
+.PHONY: docker-berserkarch-base-devel
+berserkarch-base-devel: $(OUTPUTDIR)/Dockerfile.base-devel
+	docker build -f $(OUTPUTDIR)/Dockerfile.berserkarch-base-devel -t berserkarchlinux/berserkarch:base-devel $(OUTPUTDIR)
