@@ -33,7 +33,7 @@ docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile --tag docker.io/b
 ### Running the Images
 
 ```bash
-docker run -it --security-opt seccomp=unconfined --name barchh --memory 4G --hostname berserk berserkarch/berserkarch:base
+docker run -it --security-opt seccomp=unconfined --name berserkarch --hostname berserk berserkarch/berserkarch:base
 ```
 
 ```bash
@@ -48,7 +48,20 @@ docker run -it --rm \
     --privileged \
     -p 5901:5901 \
     -p 6080:6080 \
-    -p 22:22 \
+    -p 2222:22 \
     -p 8080:8080 \
     berserkarch/berserkarch:novnc
+```
+
+### Building the ISO
+
+```bash
+docker run -it --rm \
+  --security-opt seccomp=unconfined \
+  --privileged \
+  --name berserkarch \
+  --hostname berserk \
+  -v $(pwd)/iso-output:/berserk-vm-xfce/out \
+  berserkarch/berserkarch:base-devel \
+  bash -c "git clone https://gitlab.com/berserkarch/iso-profiles/berserk-vm-xfce.git && cd berserk-vm-xfce && make devbuild"
 ```
