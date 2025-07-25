@@ -38,7 +38,7 @@ jobs:
 
       - name: Build novnc
         run: |
-          docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile --tag docker.io/berserk/berserk:$NOVNC_IMG
+          docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile --tag docker.io/berserkarch/berserkarch:$NOVNC_IMG
 
       - name: Log into registry
         uses: docker/login-action@v2
