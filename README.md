@@ -27,7 +27,7 @@ make && make berserkarch-base-devel
 ```
 
 ```bash
-docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile
+docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile --tag docker.io/berserkarch/berserkarch:novnc
 ```
 
 ### Running the Images
