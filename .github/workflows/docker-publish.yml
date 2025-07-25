@@ -1,9 +1,7 @@
-name: Publish on Push
+name: Publish on Manual Trigger
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 env:
   NOVNC_IMG: novnc
@@ -16,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: docker.io/berserkarch/berserkarch:base-devel
-    if: github.event_name == 'push'
 
     steps:
       - uses: actions/checkout@v3
