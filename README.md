@@ -41,7 +41,7 @@ docker run -it --rm --security-opt seccomp=unconfined --privileged --name berser
 ```
 
 ```bash
-docker run -it \
+docker run -it --rm \
     --security-opt seccomp=unconfined \
     --hostname berserk \
     --name berserkarch \
@@ -50,5 +50,5 @@ docker run -it \
     -p 6080:6080 \
     -p 22:22 \
     -p 8080:8080 \
-    <image-name>
+    berserkarch/berserkarch:novnc
 ```
