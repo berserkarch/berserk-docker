@@ -18,4 +18,4 @@ jobs:
           sudo pacman -Sy --noconfirm --needed make docker devtools fakeroot fakechroot
           make berserkarch-base
           make berserkarch-base-devel
-          docker build ./berserkarch-novnc --file ./berserkarch-novnc/Dockerfile
+          docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile

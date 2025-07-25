@@ -25,8 +25,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo pacman-key --init && \
-          sudo pacman-key --populate archlinux berserkarch && \
-          sudo pacman -Sy --noconfirm --needed archlinux-keyring berserkarch-keyring && \
+          sudo pacman-key --populate && \
+          sudo pacman -Sy --noconfirm --needed berserk-keyring blackarch-keyring chaotic-keyring && \
           sudo pacman -Syu --noconfirm --needed make docker devtools fakeroot fakechroot
 
       - name: Build base
