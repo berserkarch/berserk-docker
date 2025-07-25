@@ -33,11 +33,11 @@ docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile
 ### Running the Images
 
 ```bash
-docker run -it --security-opt seccomp=unconfined --name barchh --memory 4G --hostname berserk berserkarchlinux/berserkarch:base
+docker run -it --security-opt seccomp=unconfined --name barchh --memory 4G --hostname berserk berserkarch/berserkarch:base
 ```
 
 ```bash
-docker run -it --rm --security-opt seccomp=unconfined --privileged --name berserk --hostname berserk berserkarchlinux/berserkarch:base-devel
+docker run -it --rm --security-opt seccomp=unconfined --privileged --name berserk --hostname berserk berserkarch/berserkarch:base-devel
 ```
 
 ```bash
