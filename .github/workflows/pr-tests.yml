@@ -8,7 +8,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: blackarchlinux/blackarch:base-devel
+      image: berserkarch/berserkarch:base-devel
 
     steps:
       - uses: actions/checkout@v3
@@ -16,7 +16,6 @@ jobs:
       - name: Run tests
         run: |
           sudo pacman -Sy --noconfirm --needed make docker devtools fakeroot fakechroot
-          make blackarch-base
-          make blackarch-base-devel
-          docker build ./blackarch-novnc --file ./blackarch-novnc/Dockerfile
-
+          make berserkarch-base
+          make berserkarch-base-devel
+          docker build ./berserkarch-novnc --file ./berserkarch-novnc/Dockerfile

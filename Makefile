@@ -63,8 +63,8 @@ $(OUTPUTDIR)/Dockerfile.base-devel: $(OUTPUTDIR)/berserkarch-base-devel.tar.xz
 
 .PHONY: docker-berserkarch-base
 berserkarch-base: $(OUTPUTDIR)/Dockerfile.base
-	docker build -f $(OUTPUTDIR)/Dockerfile.berserkarch-base -t berserkarchlinux/berserkarch:base $(OUTPUTDIR)
+	docker build -f $(OUTPUTDIR)/Dockerfile.berserkarch-base -t berserkarch/berserkarch:base $(OUTPUTDIR)
 
 .PHONY: docker-berserkarch-base-devel
 berserkarch-base-devel: $(OUTPUTDIR)/Dockerfile.base-devel
-	docker build -f $(OUTPUTDIR)/Dockerfile.berserkarch-base-devel -t berserkarchlinux/berserkarch:base-devel $(OUTPUTDIR)
+	docker build -f $(OUTPUTDIR)/Dockerfile.berserkarch-base-devel -t berserkarch/berserkarch:base-devel $(OUTPUTDIR)
