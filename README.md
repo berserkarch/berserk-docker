@@ -63,5 +63,5 @@ docker run -it --rm \
   --hostname berserk \
   -v $(pwd)/berserk-build:/berserk-vm-xfce/ \
   berserkarch/berserkarch:base-devel \
-  bash -c "git clone https://gitlab.com/berserkarch/iso-profiles/berserk-vm-xfce.git && cd berserk-vm-xfce && make devbuild"
+  bash -c "git clone https://gitlab.com/berserkarch/iso-profiles/berserkarch.git && cd berserkarch && make devbuild"
 ```
