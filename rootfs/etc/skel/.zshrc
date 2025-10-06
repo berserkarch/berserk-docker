@@ -48,7 +48,7 @@ bindkey '^[[Z' undo                                             # Shift+tab undo
 
 export LD_PRELOAD=""
 export EDITOR="vim"
-export PATH="$HOME/bin:/usr/lib/ccache/bin/:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin:/usr/bin/core_perl:/usr/games/bin:$PATH"
+export PATH="$HOME/bin:/usr/lib/ccache/bin/:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin:/usr/bin/core_perl:/usr/games/bin:/home/user/.local/bin:$PATH:/home/user/go/bin"
 
 # alias
 alias c="clear"

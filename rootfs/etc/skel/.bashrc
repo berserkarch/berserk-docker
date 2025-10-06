@@ -17,12 +17,12 @@ fi
 
 export LD_PRELOAD=""
 export EDITOR="vim"
+export PATH="$PATH:/home/user/.local/bin:/home/user/go/bin"
 
 # alias
 alias ls="ls --color"
 alias vi="vim"
 alias shred="shred -zf"
-#alias python="python2"
 alias wget="wget -U 'noleak'"
 alias curl="curl --user-agent 'noleak'"
 

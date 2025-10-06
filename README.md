@@ -34,6 +34,11 @@ Berserk Arch is a rolling release distribution, so a full update is recommended 
     make && make berserkarch-base
     ```
 
+- Offsec Image
+    ```bash
+    make && make berserkarch-offsec
+    ```
+
 - Base Dev Image
     ```bash
     make && make berserkarch-base-devel
@@ -46,7 +51,7 @@ Berserk Arch is a rolling release distribution, so a full update is recommended 
 
 ### Running the Images
 
-- Base image as Root
+- Base image
     ```bash
     docker run -it --rm \
         --security-opt seccomp=unconfined \
@@ -56,7 +61,7 @@ Berserk Arch is a rolling release distribution, so a full update is recommended 
         berserkarch/berserkarch:base
     ```
 
-- Base Image as normal user
+- Offsec Image
     ``` bash
     docker run -it --rm \
         --security-opt seccomp=unconfined \
@@ -65,7 +70,7 @@ Berserk Arch is a rolling release distribution, so a full update is recommended 
         --hostname berserk \
         --user user \
         -w /home/user \
-        berserkarch/berserkarch:base
+        berserkarch/berserkarch:offsec
     ```
 
 - Base Dev Image (Root)
@@ -100,7 +105,7 @@ docker run -it --rm \
   --privileged \
   --name berserkarch \
   --hostname berserk \
-  -v $(pwd)/berserk-build:/berserk-vm-xfce/ \
+  -v $(pwd)/berserk-build:/berserkarch/ \
   berserkarch/berserkarch:base-devel \
   bash -c "git clone https://gitlab.com/berserkarch/iso-profiles/berserkarch.git && cd berserkarch && make devbuild"
 ```

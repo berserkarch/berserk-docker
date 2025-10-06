@@ -10,6 +10,7 @@ env:
   BASE_DEVEL_IMG: base-devel
   LATEST_IMG: latest
   BASE_IMG: base
+  OFFSEC_IMG: offsec
 
 jobs:
   # Push image to GitHub Packages.
@@ -35,6 +36,11 @@ jobs:
           docker tag berserkarch/berserkarch:base docker.io/berserkarch/berserkarch:$BASE_IMG
           docker tag berserkarch/berserkarch:base docker.io/berserkarch/berserkarch:$LATEST_IMG
 
+      - name: Build offsec
+        run: |
+          make berserkarch-offsec
+          docker tag berserkarch/berserkarch:offsec docker.io/berserkarch/berserkarch:$OFFSEC_IMG
+
       - name: Build base-devel
         run: |
           make berserkarch-base-devel
@@ -54,5 +60,6 @@ jobs:
         run: |
           docker push docker.io/berserkarch/berserkarch:$NOVNC_IMG
           docker push docker.io/berserkarch/berserkarch:$BASE_IMG
+          docker push docker.io/berserkarch/berserkarch:$OFFSEC_IMG
           docker push docker.io/berserkarch/berserkarch:$BASE_DEVEL_IMG
           docker push docker.io/berserkarch/berserkarch:$LATEST_IMG

@@ -57,7 +57,10 @@ clean:
 	rm -rf $(BUILDDIR) $(OUTPUTDIR)
 
 $(OUTPUTDIR)/berserkarch-base.tar.xz:
-	$(call rootfs,berserkarch-base,base berserk-keyring blackarch-keyring chaotic-keyring berserk-hooks sudo,withuser)
+	$(call rootfs,berserkarch-base,base berserk-keyring blackarch-keyring chaotic-keyring berserk-hooks)
+
+$(OUTPUTDIR)/berserkarch-offsec.tar.xz:
+	$(call rootfs,berserkarch-offsec,base berserk-keyring blackarch-keyring chaotic-keyring berserk-hooks sudo ca-certificates curl git lsb-release nano vim wget jq htop dnsutils nmap python python-pip python-pipx unzip whois go berserk-neofetch,withuser)
 
 $(OUTPUTDIR)/berserkarch-base-devel.tar.xz:
 	$(call rootfs,berserkarch-base-devel,base base-devel berserk-keyring blackarch-keyring chaotic-keyring vim edk2-shell grub git archiso berserk-hooks berserk-dev-tools)
@@ -65,12 +68,19 @@ $(OUTPUTDIR)/berserkarch-base-devel.tar.xz:
 $(OUTPUTDIR)/Dockerfile.base: $(OUTPUTDIR)/berserkarch-base.tar.xz
 	$(call dockerfile,berserkarch-base)
 
+$(OUTPUTDIR)/Dockerfile.offsec: $(OUTPUTDIR)/berserkarch-offsec.tar.xz
+	$(call dockerfile,berserkarch-offsec)
+
 $(OUTPUTDIR)/Dockerfile.base-devel: $(OUTPUTDIR)/berserkarch-base-devel.tar.xz
 	$(call dockerfile,berserkarch-base-devel)
 
 .PHONY: docker-berserkarch-base
 berserkarch-base: $(OUTPUTDIR)/Dockerfile.base
 	docker build -f $(OUTPUTDIR)/Dockerfile.berserkarch-base -t berserkarch/berserkarch:base $(OUTPUTDIR)
+
+.PHONY: docker-berserkarch-offsec
+berserkarch-offsec: $(OUTPUTDIR)/Dockerfile.offsec
+	docker build -f $(OUTPUTDIR)/Dockerfile.berserkarch-offsec -t berserkarch/berserkarch:offsec $(OUTPUTDIR)
 
 .PHONY: docker-berserkarch-base-devel
 berserkarch-base-devel: $(OUTPUTDIR)/Dockerfile.base-devel
