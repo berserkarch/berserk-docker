@@ -1,7 +1,7 @@
 # BerserkArch Official Docker Images
 
-Website: [https://berserkarch.xyz](https://berserkarch.xyz)
-Wiki: [https://wiki.berserkarch.xyz](https://wiki.berserkarch.xyz)
+- Website: [https://berserkarch.xyz](https://berserkarch.xyz)
+- Wiki: [https://wiki.berserkarch.xyz](https://wiki.berserkarch.xyz)
 
 ### Special note about the novnc image
 
@@ -15,7 +15,7 @@ Root filesystem tarballs are provided by Github Actions and are **only** availab
 
 - Install following deps (For Arch)
 
-``` bash
+```bash
 sudo pacman -Syy arch-install-scripts devtools fakechroot fakeroot
 ```
 
@@ -68,7 +68,7 @@ docker run -it --rm \
 
 - Offsec Image
 
-``` bash
+```bash
 docker run -it --rm \
     --security-opt seccomp=unconfined \
     --privileged
@@ -81,7 +81,7 @@ docker run -it --rm \
 
 - Base Dev Image (Root)
 
-``` bash
+```bash
 docker run -it --rm \
     --security-opt seccomp=unconfined \
     --privileged
