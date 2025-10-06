@@ -29,13 +29,11 @@ define rootfs
 	fakechroot -- fakeroot -- chroot $(BUILDDIR) /usr/bin/systemd-sysusers --root "/"
 
 	if [ "$(3)" = "withuser" ]; then \
-        fakechroot -- fakeroot -- chroot $(BUILDDIR) useradd -m -G wheel -s /bin/bash user; \
+        fakechroot -- fakeroot -- chroot $(BUILDDIR) useradd -m -u 1000 -G wheel -s /bin/bash user; \
         fakechroot -- fakeroot -- chroot $(BUILDDIR) sh -c 'echo "user:password" | chpasswd'; \
         mkdir -p $(BUILDDIR)/etc/sudoers.d; \
-        echo "%wheel ALL=(ALL:ALL) ALL" >> $(BUILDDIR)/etc/sudoers.d/wheel; \
+        echo "%wheel ALL=(ALL:ALL) NOPASSWD:ALL" >> $(BUILDDIR)/etc/sudoers.d/wheel; \
         chmod 440 $(BUILDDIR)/etc/sudoers.d/wheel; \
-        fakechroot -- fakeroot -- chroot $(BUILDDIR) chown -R user:user /home/user; \
-        fakechroot -- fakeroot -- chroot $(BUILDDIR) chmod 755 /home/user; \
     fi
 
 	# remove passwordless login for root (see CVE-2019-5021 for reference)

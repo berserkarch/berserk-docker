@@ -12,7 +12,7 @@ export PATH="${PATH}/usr/local/sbin:/opt/bin:/usr/bin/core_perl:/usr/games/bin:"
 if [[ $EUID -eq 0 ]]; then
   export PS1="\[$blue\][ \[$cyan\]\H \[$darkgrey\]\w\[$darkgrey\] \[$blue\]]\\[$darkgrey\]# \[$nc\]"
 else
-  export PS1="\[$blue\][ \[$cyan\]\H \[$darkgrey\]\w\[$darkgrey\] \[$blue\]]\\[$cyan\]\$ \[$nc\]"
+  export PS1="\[$blue\][ \[$cyan\]\u\[$darkgrey\]@\[$cyan\]\H \[$darkgrey\]\w \[$blue\]]\\[$cyan\]\$ \[$nc\]"
 fi
 
 export LD_PRELOAD=""

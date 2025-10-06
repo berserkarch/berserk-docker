@@ -1,5 +1,8 @@
 # BerserkArch Official Docker Images
 
+Website: [https://berserkarch.xyz](https://berserkarch.xyz)
+Wiki: [https://wiki.berserkarch.xyz](https://wiki.berserkarch.xyz)
+
 ### Special note about the novnc image
 
 You need to run the container with the `--security-opt seccomp=unconfined` options, otherwise, it will fail. See https://gitlab.xfce.org/apps/xfce4-terminal/-/issues/116 and https://github.com/mviereck/x11docker/issues/346 for details.
@@ -26,60 +29,68 @@ Berserk Arch is a rolling release distribution, so a full update is recommended 
 
 ### Building Images
 
-```bash
-make && make berserkarch-base
-```
+- Base Image
+    ```bash
+    make && make berserkarch-base
+    ```
 
-```bash
-make && make berserkarch-base-devel
-```
+- Base Dev Image
+    ```bash
+    make && make berserkarch-base-devel
+    ```
 
-```bash
-docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile --tag docker.io/berserkarch/berserkarch:novnc
-```
+- Base Image with VNC
+    ```bash
+    docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile --tag docker.io/berserkarch/berserkarch:novnc
+    ```
 
 ### Running the Images
 
-```bash
-docker run -it --rm \
-    --security-opt seccomp=unconfined \
-    --privileged \
-    --name berserkarch \
-    --hostname berserk \
-    berserkarch/berserkarch:base
-```
+- Base image as Root
+    ```bash
+    docker run -it --rm \
+        --security-opt seccomp=unconfined \
+        --privileged \
+        --name berserkarch \
+        --hostname berserk \
+        berserkarch/berserkarch:base
+    ```
 
-``` bash
-docker run -it --rm \
-    --security-opt seccomp=unconfined \
-    --privileged
-    --name berserkarch \
-    --hostname berserk \
-    --user user \
-    berserkarch/berserkarch:base
-```
+- Base Image as normal user
+    ``` bash
+    docker run -it --rm \
+        --security-opt seccomp=unconfined \
+        --privileged
+        --name berserkarch \
+        --hostname berserk \
+        --user user \
+        -w /home/user \
+        berserkarch/berserkarch:base
+    ```
 
-``` bash
-docker run -it --rm \
-    --security-opt seccomp=unconfined \
-    --privileged
-    --name berserkarch \
-    --hostname berserk \
-    berserkarch/berserkarch:base-devel
-```
+- Base Dev Image (Root)
+    ``` bash
+    docker run -it --rm \
+        --security-opt seccomp=unconfined \
+        --privileged
+        --name berserkarch \
+        --hostname berserk \
+        berserkarch/berserkarch:base-devel
+    ```
 
-```bash
-docker run -it --rm \
-    --security-opt seccomp=unconfined \
-    --hostname berserk \
-    --name berserkarch \
-    --privileged \
-    -p 5901:5901 \
-    -p 6080:6080 \
-    -p 2222:22 \
-    -p 8080:8080 \
-    berserkarch/berserkarch:novnc
-```
+- Base Image with VNC
+    ```bash
+    docker run -it --rm \
+        --security-opt seccomp=unconfined \
+        --hostname berserk \
+        --name berserkarch \
+        --privileged \
+        -p 5901:5901 \
+        -p 6080:6080 \
+        -p 2222:22 \
+        -p 8080:8080 \
+        berserkarch/berserkarch:novnc
+    ```
 
 ### Building the ISO
 

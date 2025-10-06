@@ -10,4 +10,6 @@ RUN pacman-key --init && \
     pacman -Syy --noconfirm && \
     pacman -Syu --noconfirm archlinux-keyring berserk-keyring chaotic-keyring blackarch-keyring
 
+RUN if [ -d /home/user ]; then chown -R 1000:1000 /home/user && chmod 755 /home/user; fi
+
 CMD ["/usr/bin/bash"]
