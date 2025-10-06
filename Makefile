@@ -20,23 +20,32 @@ define rootfs
 		--noscriptlet \
 		--hookdir $(BUILDDIR)/alpm-hooks/usr/share/libalpm/hooks/ $(2)
 
-  fakechroot -- fakeroot -- chroot $(BUILDDIR) update-ca-trust
+	fakechroot -- fakeroot -- chroot $(BUILDDIR) update-ca-trust
 	fakechroot -- fakeroot -- chroot $(BUILDDIR) locale-gen
 	fakechroot -- fakeroot -- chroot $(BUILDDIR) sh -c 'pacman-key --init && pacman-key --populate && bash -c "rm -rf etc/pacman.d/gnupg/{openpgp-revocs.d/,private-keys-v1.d/,pubring.gpg~,gnupg.S.}*"'
-  echo 'allow-weak-key-signatures' >> $(BUILDDIR)/etc/pacman.d/gnupg/gpg.conf
+	echo 'allow-weak-key-signatures' >> $(BUILDDIR)/etc/pacman.d/gnupg/gpg.conf
 
 	# add system users
 	fakechroot -- fakeroot -- chroot $(BUILDDIR) /usr/bin/systemd-sysusers --root "/"
 
+	if [ "$(3)" = "withuser" ]; then \
+        fakechroot -- fakeroot -- chroot $(BUILDDIR) useradd -m -G wheel -s /bin/bash user; \
+        fakechroot -- fakeroot -- chroot $(BUILDDIR) sh -c 'echo "user:password" | chpasswd'; \
+        mkdir -p $(BUILDDIR)/etc/sudoers.d; \
+        echo "%wheel ALL=(ALL:ALL) ALL" >> $(BUILDDIR)/etc/sudoers.d/wheel; \
+        chmod 440 $(BUILDDIR)/etc/sudoers.d/wheel; \
+        fakechroot -- fakeroot -- chroot $(BUILDDIR) chown -R user:user /home/user; \
+        fakechroot -- fakeroot -- chroot $(BUILDDIR) chmod 755 /home/user; \
+    fi
+
 	# remove passwordless login for root (see CVE-2019-5021 for reference)
 	sed -i -e 's/^root::/root:!:/' "$(BUILDDIR)/etc/shadow"
 
-	# Use BlackArch shell configs and os-release
+	# Use BerserkArch shell configs and os-release
 	fakechroot -- fakeroot -- chroot $(BUILDDIR) cp /etc/skel/{.bashrc,.zshrc,.bash_profile} /root/
 
 	# fakeroot to map the gid/uid of the builder process to root
 	fakeroot -- tar --numeric-owner --xattrs --acls --exclude-from=exclude -C $(BUILDDIR) -c . -f $(OUTPUTDIR)/$(1).tar
-
 	cd $(OUTPUTDIR); zstd --long -T0 -8 $(1).tar; sha256sum $(1).tar.zst > $(1).tar.zst.SHA256
 endef
 
@@ -50,7 +59,7 @@ clean:
 	rm -rf $(BUILDDIR) $(OUTPUTDIR)
 
 $(OUTPUTDIR)/berserkarch-base.tar.xz:
-	$(call rootfs,berserkarch-base,base berserk-keyring blackarch-keyring chaotic-keyring berserk-hooks)
+	$(call rootfs,berserkarch-base,base berserk-keyring blackarch-keyring chaotic-keyring berserk-hooks sudo,withuser)
 
 $(OUTPUTDIR)/berserkarch-base-devel.tar.xz:
 	$(call rootfs,berserkarch-base-devel,base base-devel berserk-keyring blackarch-keyring chaotic-keyring vim edk2-shell grub git archiso berserk-hooks berserk-dev-tools)

@@ -8,6 +8,14 @@ You need to run the container with the `--security-opt seccomp=unconfined` optio
 
 Root filesystem tarballs are provided by Github Actions and are **only** available for 1 week once the new build is triggered.
 
+## Setup Dependencies
+
+- Install following deps (For Arch)
+
+``` bash
+sudo pacman -Syy arch-install-scripts devtools fakechroot fakeroot
+```
+
 ## Updating
 
 Berserk Arch is a rolling release distribution, so a full update is recommended when installing new packages. In other words, we suggest either execute RUN `pacman -Syu` immediately after your FROM statement or as soon as you docker run into a container.
@@ -33,11 +41,31 @@ docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile --tag docker.io/b
 ### Running the Images
 
 ```bash
-docker run -it --security-opt seccomp=unconfined --name berserkarch --hostname berserk berserkarch/berserkarch:base
+docker run -it --rm \
+    --security-opt seccomp=unconfined \
+    --privileged \
+    --name berserkarch \
+    --hostname berserk \
+    berserkarch/berserkarch:base
 ```
 
-```bash
-docker run -it --rm --security-opt seccomp=unconfined --privileged --name berserk --hostname berserk berserkarch/berserkarch:base-devel
+``` bash
+docker run -it --rm \
+    --security-opt seccomp=unconfined \
+    --privileged
+    --name berserkarch \
+    --hostname berserk \
+    --user user \
+    berserkarch/berserkarch:base
+```
+
+``` bash
+docker run -it --rm \
+    --security-opt seccomp=unconfined \
+    --privileged
+    --name berserkarch \
+    --hostname berserk \
+    berserkarch/berserkarch:base-devel
 ```
 
 ```bash
