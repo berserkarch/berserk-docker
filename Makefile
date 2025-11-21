@@ -28,7 +28,18 @@ define rootfs
 	# add system users
 	fakechroot -- fakeroot -- chroot $(BUILDDIR) /usr/bin/systemd-sysusers --root "/"
 
+	# Use BerserkArch shell configs and os-release
+	fakechroot -- fakeroot -- chroot $(BUILDDIR) cp /etc/skel/{.bashrc,.zshrc,.bash_profile} /root/
+
 	if [ "$(3)" = "withuser" ]; then \
+				rm $(BUILDDIR)/etc/skel/.zshrc; \
+				rm $(BUILDDIR)/root/.zshrc; \
+				fakechroot -- fakeroot -- pacman -Sy -r $(BUILDDIR) \
+					--noconfirm --dbpath $(BUILDDIR)/var/lib/pacman \
+					--config pacman.conf \
+					--noscriptlet \
+					--hookdir $(BUILDDIR)/alpm-hooks/usr/share/libalpm/hooks/ berserkarch-omz; \
+				fakechroot -- fakeroot -- chroot $(BUILDDIR) cp -r /etc/skel/{.oh-my-zsh,.zshrc} /root/; \
         fakechroot -- fakeroot -- chroot $(BUILDDIR) useradd -m -u 1000 -G wheel -s /bin/bash user; \
         fakechroot -- fakeroot -- chroot $(BUILDDIR) sh -c 'echo "user:password" | chpasswd'; \
         mkdir -p $(BUILDDIR)/etc/sudoers.d; \
@@ -38,9 +49,6 @@ define rootfs
 
 	# remove passwordless login for root (see CVE-2019-5021 for reference)
 	sed -i -e 's/^root::/root:!:/' "$(BUILDDIR)/etc/shadow"
-
-	# Use BerserkArch shell configs and os-release
-	fakechroot -- fakeroot -- chroot $(BUILDDIR) cp /etc/skel/{.bashrc,.zshrc,.bash_profile} /root/
 
 	# fakeroot to map the gid/uid of the builder process to root
 	fakeroot -- tar --numeric-owner --xattrs --acls --exclude-from=exclude -C $(BUILDDIR) -c . -f $(OUTPUTDIR)/$(1).tar
@@ -60,7 +68,7 @@ $(OUTPUTDIR)/berserkarch-base.tar.xz:
 	$(call rootfs,berserkarch-base,base berserk-keyring blackarch-keyring chaotic-keyring berserk-hooks)
 
 $(OUTPUTDIR)/berserkarch-offsec.tar.xz:
-	$(call rootfs,berserkarch-offsec,base berserk-keyring blackarch-keyring chaotic-keyring berserk-hooks sudo ca-certificates curl git lsb-release nano vim wget jq htop dnsutils nmap python python-pip python-pipx unzip whois go berserk-neofetch,withuser)
+	$(call rootfs,berserkarch-offsec,base berserk-keyring blackarch-keyring chaotic-keyring berserk-hooks sudo ca-certificates curl git lsb-release nano vim wget jq htop dnsutils nmap python python-pip python-pipx unzip whois go berserk-neofetch exa which,withuser)
 
 $(OUTPUTDIR)/berserkarch-base-devel.tar.xz:
 	$(call rootfs,berserkarch-base-devel,base base-devel berserk-keyring blackarch-keyring chaotic-keyring vim edk2-shell grub git archiso berserk-hooks berserk-dev-tools)
