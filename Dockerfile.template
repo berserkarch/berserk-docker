@@ -13,9 +13,9 @@ LABEL org.opencontainers.image.created="$BUILD_DATE" \
       org.opencontainers.image.source="$PROJECT_URL" \
       org.opencontainers.image.vendor="Berserk Arch" \
       org.opencontainers.image.title="Berserk Arch Docker" \
-      org.opencontainers.image.description="Official Berserk Arch container image" \
+      org.opencontainers.image.description="Official Berserk Arch container images" \
       org.opencontainers.image.url="https://berserkarch.xyz/" \
-      org.opencontainers.image.authors="Gaurav Raj <gaurav@thehackersbrain.xyz>"
+      org.opencontainers.image.authors="Gaurav Raj (@thehackersbrain) <gaurav@thehackersbrain.xyz>"
 
 # Ensure keys are up to date
 # RUN pacman-key --init && \
