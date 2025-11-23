@@ -1,6 +1,22 @@
 FROM scratch
 ADD TEMPLATE_ROOTFS_FILE /
 ENV LANG=en_US.UTF-8
+
+# Metadata params
+ARG BUILD_DATE
+ARG PROJECT_URL
+ARG TARBALL
+ARG RELEASE_DESCRIPTION
+
+# https://github.com/opencontainers/image-spec/blob/master/annotations.md
+LABEL org.opencontainers.image.created="$BUILD_DATE" \
+      org.opencontainers.image.source="$PROJECT_URL" \
+      org.opencontainers.image.vendor="Berserk Arch" \
+      org.opencontainers.image.title="Berserk Arch Docker" \
+      org.opencontainers.image.description="Official Berserk Arch container image" \
+      org.opencontainers.image.url="https://berserkarch.xyz/" \
+      org.opencontainers.image.authors="Gaurav Raj <gaurav@thehackersbrain.xyz>"
+
 # Ensure keys are up to date
 # RUN pacman-key --init && \
 RUN pacman-key --init && \

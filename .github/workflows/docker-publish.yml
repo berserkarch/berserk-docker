@@ -4,18 +4,17 @@ on:
   workflow_dispatch:
 
 env:
-  NOVNC_IMG: novnc
   BASE_DEVEL_IMG: base-devel
   LATEST_IMG: latest
   BASE_IMG: base
   OFFSEC_IMG: offsec
+  DEB_IMG: deb
 
 jobs:
   push:
     runs-on: ubuntu-latest
     container:
       image: docker.io/berserkarch/berserkarch:base-devel
-
     steps:
       - uses: actions/checkout@v3
 
@@ -24,27 +23,31 @@ jobs:
           sudo pacman-key --init && \
           sudo pacman-key --populate && \
           sudo pacman -Sy --noconfirm --needed berserk-keyring blackarch-keyring chaotic-keyring && \
-          sudo pacman -Syu --noconfirm --needed make docker devtools fakeroot fakechroot
+          sudo pacman -Syu --noconfirm --needed docker devtools fakeroot fakechroot debootstrap wget zstd
+
+      - name: Make build script executable
+        run: chmod +x ./build.sh
 
       - name: Build base
         run: |
-          make berserkarch-base
+          ./build.sh base
           docker tag berserkarch/berserkarch:base docker.io/berserkarch/berserkarch:$BASE_IMG
           docker tag berserkarch/berserkarch:base docker.io/berserkarch/berserkarch:$LATEST_IMG
 
       - name: Build offsec
         run: |
-          make berserkarch-offsec
+          ./build.sh offsec
           docker tag berserkarch/berserkarch:offsec docker.io/berserkarch/berserkarch:$OFFSEC_IMG
 
       - name: Build base-devel
         run: |
-          make berserkarch-base-devel
+          ./build.sh base-devel
           docker tag berserkarch/berserkarch:base-devel docker.io/berserkarch/berserkarch:$BASE_DEVEL_IMG
 
-      - name: Build novnc
+      - name: Build deb
         run: |
-          docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile --tag docker.io/berserkarch/berserkarch:$NOVNC_IMG
+          ./build.sh deb
+          docker tag berserkarch/berserkarch:deb docker.io/berserkarch/berserkarch:$DEB_IMG
 
       - name: Log into registry
         uses: docker/login-action@v2
@@ -52,10 +55,10 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Push image
+      - name: Push images
         run: |
-          docker push docker.io/berserkarch/berserkarch:$NOVNC_IMG
           docker push docker.io/berserkarch/berserkarch:$BASE_IMG
           docker push docker.io/berserkarch/berserkarch:$OFFSEC_IMG
           docker push docker.io/berserkarch/berserkarch:$BASE_DEVEL_IMG
+          docker push docker.io/berserkarch/berserkarch:$DEB_IMG
           docker push docker.io/berserkarch/berserkarch:$LATEST_IMG
