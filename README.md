@@ -3,13 +3,7 @@
 - Website: [https://berserkarch.xyz](https://berserkarch.xyz)
 - Wiki: [https://wiki.berserkarch.xyz](https://wiki.berserkarch.xyz)
 
-### Special note about the novnc image
-
-You need to run the container with the `--security-opt seccomp=unconfined` options, otherwise, it will fail. See https://gitlab.xfce.org/apps/xfce4-terminal/-/issues/116 and https://github.com/mviereck/x11docker/issues/346 for details.
-
-## Availability
-
-Root filesystem tarballs are provided by Github Actions and are **only** available for 1 week once the new build is triggered.
+You need to run the container with the `--security-opt seccomp=unconfined` options, otherwise, it will fail. See <https://gitlab.xfce.org/apps/xfce4-terminal/-/issues/116> and <https://github.com/mviereck/x11docker/issues/346> for details.
 
 ## Setup Dependencies
 
@@ -90,19 +84,15 @@ docker run -it --rm \
     berserkarch/berserkarch:base-devel
 ```
 
-- Base Image with VNC
+- Berserk Arch Debian Edition
 
 ```bash
 docker run -it --rm \
+    --name berserkdeb \
+    --hostname berserkarch-deb \
     --security-opt seccomp=unconfined \
-    --hostname berserk \
-    --name berserkarch \
     --privileged \
-    -p 5901:5901 \
-    -p 6080:6080 \
-    -p 2222:22 \
-    -p 8080:8080 \
-    berserkarch/berserkarch:novnc
+    berserkarch/berserkarch:deb
 ```
 
 ### Building the ISO
