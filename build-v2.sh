@@ -36,9 +36,11 @@ build_rootfs() {
 
         log_info "Building rootfs for: $name"
 
-        # Setup alpm hooks
+        # Setup alpm hooks - Fixed the find command
         mkdir -vp "${BUILDDIR}/alpm-hooks/usr/share/libalpm/hooks"
-        find /usr/share/libalpm/hooks -exec ln -sf /dev/null "${BUILDDIR}/alpm-hooks{}" \; 2>/dev/null || true
+        if [ -d "/usr/share/libalpm/hooks" ]; then
+                find /usr/share/libalpm/hooks -type f -exec sh -c 'ln -sf /dev/null "${BUILDDIR}/alpm-hooks$(echo {} | sed "s|/usr/share/libalpm/hooks||")"' \; 2>/dev/null || true
+        fi
 
         # Setup pacman directories
         mkdir -vp "${BUILDDIR}/var/lib/pacman/" "${OUTPUTDIR}"
@@ -50,7 +52,7 @@ build_rootfs() {
 
         # Modify pacman.conf for rootfs
         sed 's|Include = |&rootfs|g' <"${BUILDDIR}/etc/pacman.conf" >pacman.conf
-        cp --recursive --preserve=timestamps --backup --suffix=.pacnew rootfs/* "${BUILDDIR}/"
+        cp --recursive --preserve=timestamps --backup --suffix=.pacnew rootfs/* "${BUILDDIR}/" 2>/dev/null || log_warn "No rootfs directory found, skipping"
 
         # Install packages
         log_info "Installing packages: $packages"
@@ -74,9 +76,17 @@ build_rootfs() {
         log_info "Adding system users"
         fakechroot -- fakeroot -- chroot "${BUILDDIR}" /usr/bin/systemd-sysusers --root "/"
 
-        # Copy shell configs
+        # Copy shell configs - Fixed to check if files exist first
         log_info "Copying shell configurations"
-        fakechroot -- fakeroot -- chroot "${BUILDDIR}" cp /etc/skel/{.bashrc,.zshrc,.bash_profile} /root/
+        if [ -f "${BUILDDIR}/etc/skel/.bashrc" ]; then
+                fakechroot -- fakeroot -- chroot "${BUILDDIR}" cp /etc/skel/.bashrc /root/ 2>/dev/null || true
+        fi
+        if [ -f "${BUILDDIR}/etc/skel/.zshrc" ]; then
+                fakechroot -- fakeroot -- chroot "${BUILDDIR}" cp /etc/skel/.zshrc /root/ 2>/dev/null || true
+        fi
+        if [ -f "${BUILDDIR}/etc/skel/.bash_profile" ]; then
+                fakechroot -- fakeroot -- chroot "${BUILDDIR}" cp /etc/skel/.bash_profile /root/ 2>/dev/null || true
+        fi
 
         # Create user if requested
         if [ "$with_user" = "withuser" ]; then
@@ -96,8 +106,12 @@ build_rootfs() {
 
                 # Copy oh-my-zsh configs to root
                 echo "export TERM=xterm-256color" >>"${BUILDDIR}/etc/skel/.zshrc"
-                cp -r "${BUILDDIR}/etc/skel/.oh-my-zsh" "${BUILDDIR}/root/"
-                cp "${BUILDDIR}/etc/skel/.zshrc" "${BUILDDIR}/root/"
+                if [ -d "${BUILDDIR}/etc/skel/.oh-my-zsh" ]; then
+                        cp -r "${BUILDDIR}/etc/skel/.oh-my-zsh" "${BUILDDIR}/root/"
+                fi
+                if [ -f "${BUILDDIR}/etc/skel/.zshrc" ]; then
+                        cp "${BUILDDIR}/etc/skel/.zshrc" "${BUILDDIR}/root/"
+                fi
 
                 # Create user account
                 log_info "Creating user account with passwordless sudo"
@@ -106,7 +120,7 @@ build_rootfs() {
 
                 # Setup sudo for wheel group
                 mkdir -p "${BUILDDIR}/etc/sudoers.d"
-                echo "%wheel ALL=(ALL:ALL) NOPASSWD:ALL" >>"${BUILDDIR}/etc/sudoers.d/wheel"
+                echo "%wheel ALL=(ALL:ALL) NOPASSWD:ALL" >"${BUILDDIR}/etc/sudoers.d/wheel"
                 chmod 440 "${BUILDDIR}/etc/sudoers.d/wheel"
         fi
 
@@ -114,9 +128,14 @@ build_rootfs() {
         log_info "Securing root account"
         sed -i -e 's/^root::/root:!:/' "${BUILDDIR}/etc/shadow"
 
-        # Create tarball
+        # Create tarball - Fixed to check if exclude file exists
         log_info "Creating compressed tarball"
-        fakeroot -- tar --numeric-owner --xattrs --acls --exclude-from=exclude -C "${BUILDDIR}" -c . -f "${OUTPUTDIR}/${name}.tar"
+        if [ -f exclude ]; then
+                fakeroot -- tar --numeric-owner --xattrs --acls --exclude-from=exclude -C "${BUILDDIR}" -c . -f "${OUTPUTDIR}/${name}.tar"
+        else
+                log_warn "exclude file not found, creating tarball without exclusions"
+                fakeroot -- tar --numeric-owner --xattrs --acls -C "${BUILDDIR}" -c . -f "${OUTPUTDIR}/${name}.tar"
+        fi
         cd "${OUTPUTDIR}"
         zstd --long -T0 -8 "${name}.tar"
         sha256sum "${name}.tar.zst" >"${name}.tar.zst.SHA256"
@@ -129,6 +148,12 @@ build_rootfs() {
 generate_dockerfile() {
         local name="$1"
         log_info "Generating Dockerfile for: $name"
+
+        if [ ! -f Dockerfile.template ]; then
+                log_error "Dockerfile.template not found"
+                return 1
+        fi
+
         sed -e "s|TEMPLATE_ROOTFS_FILE|${name}.tar.zst|" \
                 Dockerfile.template >"${OUTPUTDIR}/Dockerfile.${name}"
 }
@@ -138,6 +163,12 @@ build_docker_image() {
         local name="$1"
         local tag="$2"
         log_info "Building Docker image: $tag"
+
+        if [ ! -f "${OUTPUTDIR}/Dockerfile.${name}" ]; then
+                log_error "Dockerfile not found: ${OUTPUTDIR}/Dockerfile.${name}"
+                return 1
+        fi
+
         docker build -f "${OUTPUTDIR}/Dockerfile.${name}" \
                 --build-arg TARBALL="$TARBALL" \
                 --build-arg BUILD_DATE="$BUILD_DATE" \
@@ -184,11 +215,20 @@ build_base_devel() {
         generate_dockerfile "berserkarch-base-devel"
         build_docker_image "berserkarch-base-devel" "berserkarch/berserkarch:base-devel"
 }
+
 # Build berserkarch-deb (debian edition)
 build_deb_edition() {
         log_info "=== Building berserkarch-deb (debian) ==="
         rm -rf "${BUILDDIR}"
-        cp Dockerfile.berserkarch-deb "${OUTPUTDIR}"
+
+        if [ ! -f Dockerfile.berserkarch-deb ]; then
+                log_error "Dockerfile.berserkarch-deb not found"
+                return 1
+        fi
+
+        mkdir output
+        cp Dockerfile.berserkarch-deb "${OUTPUTDIR}/"
+        cp $TARBALL "${OUTPUTDIR}/"
         build_docker_image "berserkarch-deb" "berserkarch/berserkarch:deb"
 }
 

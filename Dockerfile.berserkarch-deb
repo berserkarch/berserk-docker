@@ -1,0 +1,28 @@
+FROM scratch
+
+# Metadata params
+ARG BUILD_DATE
+ARG PROJECT_URL
+ARG TARBALL
+ARG RELEASE_DESCRIPTION
+
+# https://github.com/opencontainers/image-spec/blob/master/annotations.md
+LABEL org.opencontainers.image.created="$BUILD_DATE" \
+      org.opencontainers.image.source="$PROJECT_URL" \
+      org.opencontainers.image.vendor="Berserk Arch" \
+      org.opencontainers.image.title="Berserk Arch (Debian Edition)" \
+      org.opencontainers.image.description="Official Berserk Arch container image (Debian Edition)" \
+      org.opencontainers.image.url="https://berserkarch.xyz/" \
+      org.opencontainers.image.authors="Gaurav Raj <gaurav@thehackersbrain.xyz>"
+
+ADD $TARBALL /
+
+ENV LANG=C.UTF-8
+
+# RUN echo "deb http://http.kali.org/kali kali-bleeding-edge main contrib non-free non-free-firmware" >/etc/apt/sources.list.d/kali-bleeding-edge.list
+# RUN echo "deb http://http.kali.org/kali kali-experimental main contrib non-free non-free-firmware" >/etc/apt/sources.list.d/kali-experimental.list
+RUN sed -i 's/NEWLINE_BEFORE_PROMPT=yes/NEWLINE_BEFORE_PROMPT=no/' /root/.bashrc
+RUN echo "berserkdeb" >/etc/hostname
+RUN apt update -y && apt install vim neovim -y
+
+CMD ["bash"]
