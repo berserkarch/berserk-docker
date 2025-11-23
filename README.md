@@ -10,7 +10,7 @@ You need to run the container with the `--security-opt seccomp=unconfined` optio
 - Install following deps (For Arch)
 
 ```bash
-sudo pacman -Syy arch-install-scripts devtools fakechroot fakeroot
+sudo pacman -Syy arch-install-scripts devtools fakechroot fakeroot debootstrap wget
 ```
 
 ## Updating
@@ -26,25 +26,31 @@ Berserk Arch is a rolling release distribution, so a full update is recommended 
 - Base Image
 
 ```bash
-make && make berserkarch-base
+./build.sh base
 ```
 
 - Offsec Image
 
 ```bash
-make && make berserkarch-offsec
+./build.sh offsec
 ```
 
 - Base Dev Image
 
 ```bash
-make && make berserkarch-base-devel
+./build.sh base-devel
 ```
 
-- Base Image with VNC
+- Berserk Arch Debian Edition
 
 ```bash
-docker build ./berserk-novnc --file ./berserk-novnc/Dockerfile --tag docker.io/berserkarch/berserkarch:novnc
+./build.sh deb
+```
+
+- All Images
+
+```bash
+./build.sh all
 ```
 
 ### Running the Images
