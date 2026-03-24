@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.created="$BUILD_DATE" \
       org.opencontainers.image.vendor="Berserk Arch" \
       org.opencontainers.image.title="Berserk Arch (Debian Edition)" \
       org.opencontainers.image.description="Official Berserk Arch container image (Debian Edition)" \
-      org.opencontainers.image.url="https://berserkarch.xyz/" \
+      org.opencontainers.image.url="https://berserkarch.org/" \
       org.opencontainers.image.authors="Gaurav Raj (@thehackersbrain) <gaurav@thehackersbrain.xyz>"
 
 ADD $TARBALL /

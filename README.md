@@ -1,7 +1,6 @@
 # BerserkArch Official Docker Images
 
-- Website: [https://berserkarch.xyz](https://berserkarch.xyz)
-- Wiki: [https://wiki.berserkarch.xyz](https://wiki.berserkarch.xyz)
+- Website: [https://berserkarch.org](https://berserkarch.org)
 
 You need to run the container with the `--security-opt seccomp=unconfined` options, otherwise, it will fail. See <https://gitlab.xfce.org/apps/xfce4-terminal/-/issues/116> and <https://github.com/mviereck/x11docker/issues/346> for details.
 
