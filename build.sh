@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 
 # Metadata
 BUILD_DATE=$(date -u +"%Y.%m.%d")
-PROJECT_URL="https://berserkarch.xyz"
+PROJECT_URL="https://berserkarch.org"
 RELEASE_DESCRIPTION="$BUILD_DATE-$PROJECT_URL"
 IMAGE_NAME="berserkdeb"
 ARCHITECTURE="amd64"
