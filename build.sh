@@ -213,13 +213,13 @@ build_rootfs() {
                 rm -f "${BUILDDIR}/etc/skel/.zshrc"
                 rm -f "${BUILDDIR}/root/.zshrc"
 
-                # Install berserkarch-omz package
-                log_info "Installing berserkarch-omz package"
+                # Install berserk-omz package
+                log_info "Installing berserk-omz package"
                 fakechroot -- fakeroot -- pacman -Sy -r "${BUILDDIR}" \
                         --noconfirm --dbpath "${BUILDDIR}/var/lib/pacman" \
                         --config pacman.conf \
                         --noscriptlet \
-                        --hookdir "${BUILDDIR}/alpm-hooks/usr/share/libalpm/hooks/" berserkarch-omz
+                        --hookdir "${BUILDDIR}/alpm-hooks/usr/share/libalpm/hooks/" berserk-omz
 
                 # Copy oh-my-zsh configs to root
                 echo "export TERM=xterm-256color" >>"${BUILDDIR}/etc/skel/.zshrc"
@@ -232,7 +232,7 @@ build_rootfs() {
 
                 # Create user account
                 log_info "Creating user account with passwordless sudo"
-                fakechroot -- fakeroot -- chroot "${BUILDDIR}" useradd -m -u 1000 -G wheel -s /bin/zsh user
+                fakechroot -- fakeroot -- chroot "${BUILDDIR}" useradd -m -u 1000 -G wheel -s /usr/sbin/zsh user
                 fakechroot -- fakeroot -- chroot "${BUILDDIR}" sh -c 'echo "user:password" | chpasswd'
 
                 # Setup sudo for wheel group
